@@ -15,8 +15,9 @@ class _HomePageState extends State<HomePage> {
   WeatherApiClient weatherApiClient = WeatherApiClient();
   Weather? weatherData;
 
-  Future<void> getData() async {
+  Future<Weather> getData() async {
     weatherData = await weatherApiClient.getWeatherData('Baku');
+    return weatherData!;
   }
 
   @override
@@ -34,7 +35,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: FutureBuilder(
         future: getData(),
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot<Weather> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return ListView.separated(
                 padding: const EdgeInsets.all(10),
@@ -48,7 +49,7 @@ class _HomePageState extends State<HomePage> {
                     child: GestureDetector(
                       onTap: () => Navigator.pushNamed(context, '/second'),
                       child: cityWeatherContainer('${weatherData?.cityName}',
-                          '${weatherData?.temprature}'),
+                          '${weatherData!.temprature}'),
                     ),
                   );
                 });
